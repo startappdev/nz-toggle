@@ -14,7 +14,7 @@
             template: [
                 '<div class="nz-toggle-wrap" ng-class="getStyle()" ng-style="wrapStyle">',
                 '   <div class="nz-toggle">',
-                '       <div class="nz-toggle-handle"></div>',
+                '       <div class="nz-toggle-handle icon-slider"></div>',
                 '   </div>',
                 '   <div class="nz-toggle-tooltip" ng-show="tooltip">',
                 '       <span ng-class="{\'active\': showTooltip1}">',
@@ -35,6 +35,7 @@
 
                 // Child Elements
                 var elToggle = angular.element(el[0].querySelector('.nz-toggle-handle'));
+                var elToggleFrame = angular.element(el[0]);
 
                 // Interface States
                 var pressed,
@@ -66,7 +67,7 @@
                     valTrue: true,
                     valFalse: false,
                     valNull: null,
-                    width: 50,
+                    width: 290,
                     height: 25,
                     padding: 3,
                     colorTrue: null,
@@ -121,22 +122,22 @@
 
                     // Interaction events
                     addEventListeners(el[0], 'mousedown touchstart', onToggleTouch);
-                    addEventListeners(el[0], 'click', onClick);
+                    //addEventListeners(el[0], 'click', onClick);
 
                     // Cleanup
                     vm.$on('$destroy', function() {
                         removeEventListeners(el[0], 'mousedown touchstart', onToggleTouch);
                         removeEventListeners(window, 'mousemove touchmove', onToggleMove);
                         removeEventListeners(window, 'mouseup touchend', onToggleRelease);
-                        removeEventListeners(el[0], 'click', onClick);
+                        //removeEventListeners(el[0], 'click', onClick);
 
                     });
                 }
 
                 function onClick(e) {
-                    if (movement < 1) {
-                        toggle();
-                    }
+                    //if (movement < 1) {
+                    //    toggle();
+                    //}
                 }
 
                 function onToggleTouch(e) {
@@ -172,20 +173,21 @@
                         cWidth = el[0].offsetWidth,
 
                         hp = v / (cHeight / 2) * 100,
-                        wp = h / (cWidth / 2) * 100;
+                        wp = h / (cWidth / 1) * 100;
 
                     if (vm.vertical) {
                         current = parseFloat(styleMap.vertical[vm.state]);
-                        change = Math.max(Math.min(parseFloat(hp + current), 100), 0);
+                        change = Math.max(Math.min(parseFloat(hp + current), 150), 0);
                         now = current + (change - current) / 2;
 
                         elToggle.css('top', now + '%');
                     } else {
                         current = parseFloat(styleMap.horizontal[vm.state]);
                         change = Math.max(Math.min(parseFloat(wp + current), 100), 0);
-                        now = current + (change - current) / 2;
+                        now = current + (change - current);
 
-                        elToggle.css('left', now + '%');
+                        elToggle.css('left', now + '%') / 2;
+                        elToggleFrame.css('cssText', 'background: linear-gradient(to right, #eb4c51 ' + now + '%, #00e5ff  100%)');
                     }
 
                     movement = Math.max(movement, Math.max(Math.abs(v), Math.abs(h)));
@@ -207,7 +209,7 @@
                             return;
                         }
                         if (movement < 1 && e.type == 'touchend') {
-                            toggle();
+                            //toggle();
                             return;
                         }
                         if (vm.triToggle) {
@@ -249,7 +251,7 @@
                         toggle('true');
                         return;
                     });
-
+                    elToggleFrame.css('cssText', 'background: ');
                     elToggle.css({
                         top: '',
                         left: '',
@@ -375,7 +377,7 @@
                     if (angular.equals(vm.ngModel, vm.valFalse)) {
                         vm.state = 'false';
                         if (null != vm.colorFalse) {
-                          vm.wrapStyle.backgroundColor = vm.colorFalse;
+                            vm.wrapStyle.backgroundColor = vm.colorFalse;
                         }
 
                         if (vm.vertical) {
